@@ -1,0 +1,81 @@
+# ── Production Floor: N Robot Cells ─────────────────────────────────────────
+# Port formula per cell (id = 0, 1, 2, ...):
+#   Web UI      : 8080 + id   → http://localhost:8080, :8081, :8082 ...
+#   Speed/30003 : 30003 + id*1000
+#   RTDE/30004  : 30004 + id*1000
+#   Primary/30001: 30001 + id*1000
+#   Dashboard   : 29999 + id
+#
+# Add a new service block (copy cell_1 → cell_2, increment id offset by 1000)
+# and add matching volumes to run more cells.
+#
+# URScript must connect to: socket_open("host.docker.internal", 50001+id, "socketMT")
+
+services:
+
+  # ── Cell 0 ──────────────────────────────────────────────────────────────────
+  cell_0:
+    image: universalrobots/ursim_polyscopex:0.18.96
+    container_name: ursim-cell-0
+    privileged: true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - ROBOT_TYPE=UR5
+      - ROBOT_TYPE_CONTROLLER=UR5
+      - HOST_ARCH=amd64
+      - ROS2_NAMESPACE=UR8888
+      - DEVMODE=true
+    ports:
+      - "8080:80"          # Web UI  → http://localhost:8080
+      - "29999:29999"      # Dashboard
+      - "30001:30001"      # Primary interface
+      - "30003:30003"      # Speed command (realtime)
+      - "30004:30004"      # RTDE
+    volumes:
+      - cell0-urcaps:/var/urcaps
+      - cell0-snippets:/etc/nginx/ur-snippets
+      - cell0-docker:/var/lib/docker
+      - cell0-applications:/ur/bin/backend/applications
+      - cell0-safety:/ur/etc/backend/safety
+
+  # ── Cell 1 ──────────────────────────────────────────────────────────────────
+  cell_1:
+    image: universalrobots/ursim_polyscopex:0.18.96
+    container_name: ursim-cell-1
+    privileged: true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - ROBOT_TYPE=UR5
+      - ROBOT_TYPE_CONTROLLER=UR5
+      - HOST_ARCH=amd64
+      - ROS2_NAMESPACE=UR8888
+      - DEVMODE=true
+    ports:
+      - "8081:80"          # Web UI  → http://localhost:8081
+      - "30999:29999"      # Dashboard
+      - "31001:30001"      # Primary interface
+      - "31003:30003"      # Speed command
+      - "31004:30004"      # RTDE
+    volumes:
+      - cell1-urcaps:/var/urcaps
+      - cell1-snippets:/etc/nginx/ur-snippets
+      - cell1-docker:/var/lib/docker
+      - cell1-applications:/ur/bin/backend/applications
+      - cell1-safety:/ur/etc/backend/safety
+
+  # ── Add Cell 2 by copying the cell_1 block and replacing:
+  #    cell_1 → cell_2,  31xxx → 32xxx,  8081 → 8082 ──────────────────────────
+
+volumes:
+  cell0-urcaps:
+  cell0-snippets:
+  cell0-docker:
+  cell0-applications:
+  cell0-safety:
+  cell1-urcaps:
+  cell1-snippets:
+  cell1-docker:
+  cell1-applications:
+  cell1-safety:

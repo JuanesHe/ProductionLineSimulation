@@ -1,0 +1,18 @@
+# Universal Robots SDK - excluded due to licensing restrictions
+# Download from https://www.universal-robots.com/developer/polyscopex/
+polyscopex-sdk-*/
+*.zip
+
+# Python virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Log files (generated at runtime)
+robot_logs*.txt
+
+# VS Code
+.vscode/

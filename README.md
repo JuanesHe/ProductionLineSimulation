@@ -67,7 +67,25 @@ You should see `root-urcontrol-primary-1` listed as healthy.
 
 ### 3. Load the URScript on each robot
 
-Open each robot's web UI and create a program with this script (change the port per cell):
+A ready-to-use robot program is included in this repository: **`mt1_0.urpx`**.
+
+1. Open the robot's web UI (`http://localhost:8080` for cell 0, `http://localhost:8081` for cell 1)
+2. Go to **Programs** → **Upload** and load `mt1_0.urpx`
+3. Open the program and find the **Init Communication** node
+4. **Change the port number** to match the cell:
+   - Cell 0 → `50001`
+   - Cell 1 → `50002`
+   - Cell N → `50001 + N`
+5. Save and press **Play**
+
+The relevant line in the URScript looks like this — only the port number needs to change:
+
+```urscript
+while (socket_open("host.docker.internal", 50001, "socketMT")) == False:
+end
+```
+
+If you prefer to write the script from scratch:
 
 **Cell 0 — port 50001:**
 ```urscript
@@ -183,7 +201,7 @@ Port formula for cell `id`:
 | `floor.py` | `FloorSimulation` — orchestrates cells, conveyors, feeder, packer |
 | `robot_cell.py` | `RobotCell` — manages one robot container (socket server + logging) |
 | `docker-compose.yml` | Starts N robot simulator containers |
-| `ComunicationSingleRobot.py` | Single-robot reference implementation |
+| `mt1_0.urpx` | Robot program to upload to each UR simulator (change port in Init Communication node) |
 | `Check_connection.py` | Quick RTDE connection test |
 
 ## Stopping

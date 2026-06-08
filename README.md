@@ -70,7 +70,7 @@ You should see `root-urcontrol-primary-1` listed as healthy.
 A ready-to-use robot program is included in this repository: **`mt1_0.urpx`**.
 
 1. Open the robot's web UI (`http://localhost:8080` for cell 0, `http://localhost:8081` for cell 1)
-2. Go to **Programs** → **Upload** and load `mt1_0.urpx`
+2. Go to **Programs** → **Upload** and load `mt.urpx`
 3. Open the program and find the **Init Communication** node
 4. **Change the port number** to match the cell:
    - Cell 0 → `50001`

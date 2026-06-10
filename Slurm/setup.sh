@@ -12,9 +12,11 @@ sudo apt install -y docker.io
 echo "=== 3. Configuring User Group Permissions ==="
 sudo usermod -aG docker $USER
 
-echo "=== 4. Installing Docker Compose v2.29.2 ==="
-sudo curl -SL "https://github.com" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
+echo "=== 4. Installing Docker Compose ==="
+sudo apt update && sudo apt install -y docker-compose-v2
+sudo ln -sf /usr/libexec/docker/cli-plugins/docker-compose /usr/local/bin/docker-compose
+hash -r
+docker-compose version
 
 echo "=== 5. Verifying Installation Versions ==="
 docker --version
